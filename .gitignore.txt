@@ -1,0 +1,11 @@
+# STM32CubeIDE / Eclipse Çöp Dosyaları
+Debug/
+Release/
+.metadata/
+.extSettings
+.launches/
+*.map
+*.elf
+*.bin
+*.hex
+*.list
