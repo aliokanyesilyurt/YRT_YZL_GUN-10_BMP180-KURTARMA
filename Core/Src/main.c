@@ -21,11 +21,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "stdio.h"
-#include "stdlib.h"
-#include "string.h"
-#include "math.h"
 #include "bmp180_for_stm32_hal.h"
+#include "functions.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -58,8 +55,7 @@ static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_I2C2_Init(void);
 /* USER CODE BEGIN PFP */
-// void delay_us(uint16_t us);
-// void delay_ms(uint32_t ms);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -99,8 +95,6 @@ int main(void)
   MX_USART2_UART_Init();
   MX_I2C2_Init();
   /* USER CODE BEGIN 2 */
-  HAL_ADC_Start_IT(&hadc1);
-
   BMP180_Init(&hi2c2);
   BMP180_SetOversampling(BMP180_STANDARD);
   BMP180_UpdateCalibrationData();
@@ -110,8 +104,25 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  degerAtama(); // Her döngü başında tüm değerlerimizi yeniliyoruz.
 
+	  switch (ucusDurumu){ // Kurtarma algoritması, fonksiyonlar ve switch-case yapısıyla oluşturuldu.
+	  	  case FAZ_RAMPA: firlatma(); // Rampadan fırlatmayı tespit etme.
+	  	  	  	  	  	  break;
+	  	  case FAZ_FIRLATMA: tirmanma(); // Fırlatmadan burnoutu tespit etme.
+	  	  	  	  	  	  	 break;
+	  	  case FAZ_TIRMANIS: arama(); // Burnout sonrası tepe noktası kilidini açıp aramaya geçme.
+	  	  	  	  	  	     break;
+	  	  case FAZ_ARAYIS: drogueAcma(); // Drogue açmak için apogee tespiti.
+	  		  	  	  	   break;
+	  	  case FAZ_DUSUS: anaParasutAcma(); // Ana paraşüt açma tespiti.
+	  	  	  	  	  	  break;
+		  case FAZ_INIS:  inisKontrol(); // İniş kontrol algoritması ve yedek paraşüt.
+		  	  	  	  	  break;
+		  case FAZ_BITIS: ledYakma(); // İnişin tamamlanmasıyla beraber yapılacaklar.
+		  	  	  	  	  break;
   }
+ }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -239,30 +250,19 @@ static void MX_GPIO_Init(void)
   /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5|GPIO_PIN_12, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LED_PA5_Pin|YEDEK_PA7_Pin|ANA_PA8_Pin|TEPE_PA9_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : PC13 */
-  GPIO_InitStruct.Pin = GPIO_PIN_13;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : PA5 PA12 */
-  GPIO_InitStruct.Pin = GPIO_PIN_5|GPIO_PIN_12;
+  /*Configure GPIO pins : LED_PA5_Pin YEDEK_PA7_Pin ANA_PA8_Pin TEPE_PA9_Pin */
+  GPIO_InitStruct.Pin = LED_PA5_Pin|YEDEK_PA7_Pin|ANA_PA8_Pin|TEPE_PA9_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
@@ -270,30 +270,6 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
-/*
-void delay_us(uint16_t us) {
-	__HAL_TIM_SET_COUNTER(&htim11, 0);
-	 uint16_t startTime = __HAL_TIM_GET_COUNTER(&htim11);
-	 while ((__HAL_TIM_GET_COUNTER(&htim11) - startTime) < us)
-		 ;
-}
-
-void delay_ms(uint32_t ms){
-	uint32_t startTime = HAL_GetTick();
-	while(HAL_GetTick() - startTime < ms)
-		;
-}
-
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-	// Timer 11'den onay geldiğini bildiren bare-metal kod.
-    if (htim->Instance == TIM11)
-    {
-  	  flag = 1;
-    }
-}
-*/
 
 /* USER CODE END 4 */
 

@@ -1,0 +1,13 @@
+../Core/Src/functions.c:12:6:firlatma	4	static
+../Core/Src/functions.c:22:6:tirmanma	4	static
+../Core/Src/functions.c:34:6:arama	4	static
+../Core/Src/functions.c:42:6:drogueAcma	8	static
+../Core/Src/functions.c:56:6:anaParasutAcma	8	static
+../Core/Src/functions.c:63:6:ledYakma	8	static
+../Core/Src/functions.c:70:7:hizHesaplama	16	static
+../Core/Src/functions.c:82:7:ivmeHesaplama	16	static
+../Core/Src/functions.c:94:7:irtifaHesaplama	8	static
+../Core/Src/functions.c:99:6:inisKontrol	8	static
+../Core/Src/functions.c:108:7:ortFiltreleme	24	static
+../Core/Src/functions.c:117:6:degerAtama	8	static
+../Core/Src/functions.c:135:6:uartOkuma	72	static

@@ -57,6 +57,14 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define LED_PA5_Pin GPIO_PIN_5
+#define LED_PA5_GPIO_Port GPIOA
+#define YEDEK_PA7_Pin GPIO_PIN_7
+#define YEDEK_PA7_GPIO_Port GPIOA
+#define ANA_PA8_Pin GPIO_PIN_8
+#define ANA_PA8_GPIO_Port GPIOA
+#define TEPE_PA9_Pin GPIO_PIN_9
+#define TEPE_PA9_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
 

@@ -1,0 +1,13 @@
+../Core/Src/functions.c:12:6:firlatma	4
+../Core/Src/functions.c:22:6:tirmanma	5
+../Core/Src/functions.c:34:6:arama	2
+../Core/Src/functions.c:42:6:drogueAcma	3
+../Core/Src/functions.c:56:6:anaParasutAcma	2
+../Core/Src/functions.c:63:6:ledYakma	2
+../Core/Src/functions.c:70:7:hizHesaplama	2
+../Core/Src/functions.c:82:7:ivmeHesaplama	2
+../Core/Src/functions.c:94:7:irtifaHesaplama	1
+../Core/Src/functions.c:99:6:inisKontrol	5
+../Core/Src/functions.c:108:7:ortFiltreleme	2
+../Core/Src/functions.c:117:6:degerAtama	3
+../Core/Src/functions.c:135:6:uartOkuma	1
