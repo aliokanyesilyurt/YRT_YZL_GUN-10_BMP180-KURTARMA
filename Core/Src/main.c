@@ -98,6 +98,21 @@ int main(void)
   BMP180_Init(&hi2c2);
   BMP180_SetOversampling(BMP180_STANDARD);
   BMP180_UpdateCalibrationData();
+
+    float toplamBasinc = 0;
+
+    // Sistemi 20 defa okuyup ortalamasını alarak rüzgar/gürültü hatasını sıfırlıyoruz.
+    for(int i = 0; i < 20; i++) {
+        toplamBasinc += BMP180_GetPressure();
+        HAL_Delay(50); // Sensörün veriyi toparlaması için ufak bir bekleme
+    }
+
+    // Ortalamayı alıp yer basıncını mühürledik
+    basincBaslangic = toplamBasinc / 20.0f;
+
+    // Yerdeki referans irtifamızı hesaplıyoruz (DENIZ_BAS define'ını kullanıyoruz)
+    irtifaBaslangic = 44330.0f * (1.0f - powf(basincBaslangic / DENIZ_BAS, 0.1903f));
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -105,6 +120,7 @@ int main(void)
   while (1)
   {
 	  degerAtama(); // Her döngü başında tüm değerlerimizi yeniliyoruz.
+	  uartOkuma();
 
 	  switch (ucusDurumu){ // Kurtarma algoritması, fonksiyonlar ve switch-case yapısıyla oluşturuldu.
 	  	  case FAZ_RAMPA: firlatma(); // Rampadan fırlatmayı tespit etme.
@@ -255,10 +271,13 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LED_PA5_Pin|YEDEK_PA7_Pin|ANA_PA8_Pin|TEPE_PA9_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LED_PA4_Pin|LED_PA5_Pin|LED_PA6_Pin|YEDEK_PA7_Pin
+                          |ANA_PA8_Pin|TEPE_PA9_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : LED_PA5_Pin YEDEK_PA7_Pin ANA_PA8_Pin TEPE_PA9_Pin */
-  GPIO_InitStruct.Pin = LED_PA5_Pin|YEDEK_PA7_Pin|ANA_PA8_Pin|TEPE_PA9_Pin;
+  /*Configure GPIO pins : LED_PA4_Pin LED_PA5_Pin LED_PA6_Pin YEDEK_PA7_Pin
+                           ANA_PA8_Pin TEPE_PA9_Pin */
+  GPIO_InitStruct.Pin = LED_PA4_Pin|LED_PA5_Pin|LED_PA6_Pin|YEDEK_PA7_Pin
+                          |ANA_PA8_Pin|TEPE_PA9_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
